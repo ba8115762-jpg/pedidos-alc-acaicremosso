@@ -4,339 +4,1222 @@
 <meta charset="UTF-8">
 <title>ALC AÇAÍ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-body{margin:0;font-family:Arial;background:#f5f5f5}
-header{background:#4b0f6b;color:#fff;padding:10px;text-align:center}
-.logo{max-width:90px;display:block;margin:0 auto 5px}
-.container{padding:15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px}
+body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg, #f5f5f5 0%, #fff8e1 100%);color:#333}
+header{background:linear-gradient(135deg, #8e44ad, #9b59b6);color:#fff;padding:15px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.logo{max-width:120px;display:block;margin:0 auto 8px;border-radius:50%;border:3px solid white;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+.container{padding:20px;max-width:1200px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;margin:20px 0}
 
-.card,.ing-card{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:10px;text-align:center}
-.card img,.ing-card img{width:100%;height:120px;object-fit:cover;border-radius:8px}
-.card button{background:#4b0f6b;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+.card,.ing-card{
+    background:white;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    padding:15px;
+    text-align:center;
+    transition:transform 0.3s, box-shadow 0.3s;
+    border:1px solid #eee;
+    position:relative;
+    overflow:hidden;
+}
+.card:hover,.ing-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.15)}
 
-.ing-card{cursor:pointer;border:2px solid transparent}
-.ing-card.sel{border-color:#4b0f6b}
-
-.aviso{
-  background:#fff3cd;
-  color:#856404;
-  padding:12px;
-  border-radius:8px;
-  text-align:center;
-  margin:10px 0;
-  font-weight:bold;
+.card img,.ing-card img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
 
-#carrinhoBox{background:#fff;padding:15px;border-radius:10px;margin-top:20px}
+.card button{
+    background:linear-gradient(135deg, #8e44ad, #9b59b6);
+    color:#fff;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    width:100%;
+    margin-top:10px;
+    transition:opacity 0.3s;
+}
+.card button:hover{opacity:0.9}
 
-#adminBtn{position:fixed;bottom:10px;right:10px;background:#000;color:#fff;border:none;padding:8px 12px;border-radius:20px;font-size:12px}
+.ing-card{
+    cursor:pointer;
+    border:3px solid transparent;
+    position:relative;
+}
+.ing-card.sel{
+    border-color:#8e44ad;
+    background:#f9f0ff;
+}
+.ing-card.sel::after{
+    content:"✓";
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:#8e44ad;
+    color:white;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
 
-#admin{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#111;color:#fff;padding:20px;overflow:auto}
-#admin input{padding:6px;margin:4px;width:90%}
-#admin button{padding:8px;margin-top:6px}
-#admin ul li{margin:6px 0}
-#admin ul li button{margin-left:8px;background:red;color:#fff;border:none;padding:4px 8px}
+.aviso{
+    background:linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color:#856404;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    margin:15px 0;
+    font-weight:bold;
+    border-left:5px solid #f39c12;
+}
+
+#carrinhoBox{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    margin-top:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    border-top:5px solid #8e44ad;
+}
+
+#carrinho{
+    list-style:none;
+    padding:0;
+    max-height:300px;
+    overflow-y:auto;
+}
+#carrinho li{
+    background:#f8f9fa;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-left:4px solid #8e44ad;
+}
+#carrinho li button{
+    background:#e74c3c;
+    color:white;
+    border:none;
+    padding:5px 10px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+#adminBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:linear-gradient(135deg, #2c3e50, #34495e);
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:30px;
+    font-size:14px;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+#admin{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.95);
+    color:#fff;
+    padding:30px;
+    overflow:auto;
+    z-index:2000;
+}
+#admin h2{color:#9b59b6;text-align:center}
+#admin input, #admin select, #admin textarea{
+    padding:12px;
+    margin:10px 5px;
+    width:calc(100% - 20px);
+    border-radius:8px;
+    border:1px solid #444;
+    background:#222;
+    color:white;
+}
+#admin button{
+    padding:12px 20px;
+    margin:10px 5px;
+    background:#8e44ad;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.admin-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:15px;
+    margin:20px 0;
+}
+.admin-card{
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #444;
+}
+.total-display{
+    font-size:1.5em;
+    font-weight:bold;
+    color:#2ecc71;
+    text-align:center;
+    margin:15px 0;
+    padding:15px;
+    background:#1a1a1a;
+    border-radius:10px;
+}
+.whatsapp-btn{
+    background:#25D366 !important;
+    color:white !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:1.1em;
+}
+
+/* Responsivo */
+@media (max-width:768px){
+    .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+    .container{padding:15px}
+    #adminBtn{bottom:10px;right:10px;padding:10px 15px}
+}
+
+/* Animações */
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+.fade-in{
+    animation:fadeIn 0.5s ease forwards;
+}
+
+/* Loader */
+.loader{
+    border:4px solid #f3f3f3;
+    border-top:4px solid #8e44ad;
+    border-radius:50%;
+    width:40px;
+    height:40px;
+    animation:spin 1s linear infinite;
+    margin:20px auto;
+}
+@keyframes spin{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(360deg)}
+}
+
+/* Status do pedido */
+.status-pendente{color:#f39c12}
+.status-preparo{color:#3498db}
+.status-entregue{color:#2ecc71}
+.status-cancelado{color:#e74c3c}
 </style>
 </head>
 
 <body>
 
 <header>
-  <!-- 🔴 TROQUE logo.png pelo nome real da sua imagem -->
-  <img src="logo.png" class="logo" alt="Logo ALC AÇAÍ">
-  <strong>ALC AÇAÍ</strong>
+    <img src="logo.png" class="logo" alt="Logo ALC AÇAÍ" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%239b59b6%22/><text x=%2250%22 y=%2255%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22white%22 text-anchor=%22middle%22>ALC</text></svg>'">
+    <h1 style="margin:5px 0">ALC AÇAÍ</h1>
+    <p style="margin:0;opacity:0.9">Os melhores açaís da região!</p>
 </header>
 
 <div class="container">
+    <h2><i class="fas fa-ice-cream"></i> Cardápio</h2>
+    <div id="avisoProdutos"></div>
+    <div id="produtos" class="grid"></div>
 
-<h2>🍧 Cardápio</h2>
-<div id="avisoProdutos"></div>
-<div id="produtos" class="grid"></div>
+    <h2><i class="fas fa-plus-circle"></i> Escolha até 4 ingredientes grátis</h2>
+    <p style="color:#666;font-size:0.9em">Do 5º em diante: <strong>R$ 3,00 cada</strong></p>
+    <div id="avisoIngredientes"></div>
+    <div id="ingredientes" class="grid"></div>
 
-<h2>🥄 Escolha até 4 ingredientes grátis</h2>
-<p>Do 5º em diante: <strong>R$ 3,00 cada</strong></p>
-<div id="avisoIngredientes"></div>
-<div id="ingredientes" class="grid"></div>
+    <div id="carrinhoBox">
+        <h3><i class="fas fa-shopping-cart"></i> Carrinho</h3>
+        <ul id="carrinho"></ul>
+        
+        <div style="background:#f8f9fa;padding:15px;border-radius:10px;margin:15px 0">
+            <div style="display:flex;justify-content:space-between;margin:5px 0">
+                <span>Subtotal:</span>
+                <span>R$ <span id="subtotal">0</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin:5px 0;color:#e74c3c">
+                <span>Extras (ingredientes):</span>
+                <span>R$ <span id="extra">0</span></span>
+            </div>
+            <hr style="margin:10px 0;border-color:#ddd">
+            <div style="display:flex;justify-content:space-between;margin:5px 0;font-size:1.2em;font-weight:bold">
+                <span>TOTAL:</span>
+                <span>R$ <span id="total">0</span></span>
+            </div>
+        </div>
 
-<div id="carrinhoBox">
-  <h3>🛒 Carrinho</h3>
-  <ul id="carrinho"></ul>
-  <p><strong>Extras:</strong> R$ <span id="extra">0</span></p>
-  <p><strong>Total:</strong> R$ <span id="total">0</span></p>
+        <h4><i class="fas fa-credit-card"></i> Forma de pagamento</h4>
+        <select id="pagamento" style="width:100%;padding:12px;border-radius:8px;margin:10px 0">
+            <option value="Cartão">💳 Cartão</option>
+            <option value="Pix">💰 Pix</option>
+            <option value="Dinheiro">💵 Dinheiro</option>
+        </select>
 
-  <label>Forma de pagamento</label>
-  <select id="pagamento">
-    <option>Cartão</option>
-    <option>Pix</option>
-    <option>Dinheiro</option>
-  </select>
+        <h4><i class="fas fa-comment"></i> Mensagem para a loja (opcional)</h4>
+        <textarea id="mensagem" rows="3" style="width:100%;padding:12px;border-radius:8px;margin:10px 0" placeholder="Alguma observação? Ex: Sem granola, mais leite condensado..."></textarea>
 
-  <br><br>
-  <label>Mensagem para a loja</label><br>
-  <textarea id="mensagem" rows="3" style="width:100%"></textarea><br><br>
-
-  <button onclick="finalizarPedido()">Finalizar Pedido</button>
+        <button onclick="finalizarPedido()" style="background:linear-gradient(135deg,#2ecc71,#27ae60);color:white;border:none;padding:15px;border-radius:8px;width:100%;font-size:1.1em;font-weight:bold;cursor:pointer">
+            <i class="fas fa-check-circle"></i> Finalizar Pedido
+        </button>
+    </div>
 </div>
-</div>
 
-<button id="adminBtn" onclick="abrirAdmin()">ADMIN</button>
+<button id="adminBtn" onclick="abrirAdmin()">
+    <i class="fas fa-cog"></i> ADMIN
+</button>
 
 <!-- ================= PAINEL ADMIN ================= -->
 <div id="admin">
-<h2>Painel Administrativo</h2>
+    <h2><i class="fas fa-tachometer-alt"></i> Painel Administrativo</h2>
+    
+    <div class="admin-grid">
+        <div class="admin-card">
+            <h3><i class="fas fa-plus"></i> Adicionar Produto</h3>
+            <input id="aNome" placeholder="Nome do produto (ex: Açaí 500ml)">
+            <input id="aPreco" type="number" placeholder="Preço (ex: 20.00)" step="0.01">
+            <select id="aCategoria" style="width:100%;padding:12px;margin:10px 0;border-radius:8px">
+                <option value="acai">Açaí Tradicional</option>
+                <option value="nutella">Açaí com Nutella</option>
+                <option value="cupuacu">Cupuaçu</option>
+                <option value="outros">Outros</option>
+            </select>
+            <input type="file" id="aImagem" accept="image/*" style="margin:10px 0">
+            <button onclick="addProduto()" class="whatsapp-btn">
+                <i class="fas fa-save"></i> Salvar Produto
+            </button>
+        </div>
 
-<h3>➕ Adicionar Produto</h3>
-<input id="aNome" placeholder="Nome do produto">
-<input id="aPreco" placeholder="Preço">
-<input type="file" id="aImagem" accept="image/*">
-<button onclick="addProduto()">Adicionar Produto</button>
+        <div class="admin-card">
+            <h3><i class="fas fa-plus-circle"></i> Adicionar Ingrediente</h3>
+            <input id="iNome" placeholder="Nome do ingrediente">
+            <input type="file" id="iImagem" accept="image/*" style="margin:10px 0">
+            <button onclick="addIngrediente()" class="whatsapp-btn">
+                <i class="fas fa-save"></i> Salvar Ingrediente
+            </button>
+        </div>
+    </div>
 
-<h3>➕ Adicionar Ingrediente</h3>
-<input id="iNome" placeholder="Nome do ingrediente">
-<input type="file" id="iImagem" accept="image/*">
-<button onclick="addIngrediente()">Adicionar Ingrediente</button>
+    <h3><i class="fas fa-box"></i> Produtos Cadastrados</h3>
+    <div class="admin-grid" id="listaAdmin"></div>
 
-<h3>📦 Produtos</h3>
-<ul id="listaAdmin"></ul>
+    <h3><i class="fas fa-mortar-pestle"></i> Ingredientes Cadastrados</h3>
+    <div class="admin-grid" id="listaIngAdmin"></div>
 
-<h3>🥄 Ingredientes</h3>
-<ul id="listaIngAdmin"></ul>
+    <h3><i class="fas fa-clipboard-list"></i> Pedidos Recebidos</h3>
+    <div style="max-height:400px;overflow-y:auto;background:#222;padding:15px;border-radius:10px">
+        <div id="listaPedidos"></div>
+    </div>
 
-<br>
-<button onclick="fecharAdmin()">Fechar painel</button>
+    <div style="margin:20px 0;text-align:center">
+        <button onclick="exportarDados()" style="background:#3498db">
+            <i class="fas fa-download"></i> Exportar Dados
+        </button>
+        <button onclick="importarDados()" style="background:#9b59b6">
+            <i class="fas fa-upload"></i> Importar Dados
+        </button>
+        <button onclick="limparTudo()" style="background:#e74c3c">
+            <i class="fas fa-trash"></i> Limpar Tudo
+        </button>
+        <button onclick="fecharAdmin()" style="background:#2c3e50">
+            <i class="fas fa-times"></i> Fechar Painel
+        </button>
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:3000;align-items:center;justify-content:center">
+    <div style="background:white;padding:30px;border-radius:15px;max-width:500px;width:90%;text-align:center">
+        <h2 style="color:#2ecc71"><i class="fas fa-check-circle"></i> Pedido Confirmado!</h2>
+        <p>Número do pedido: <strong id="numeroPedidoModal">0000</strong></p>
+        <div id="resumoPedido" style="text-align:left;background:#f8f9fa;padding:15px;border-radius:8px;margin:15px 0"></div>
+        <button onclick="fecharModal()" style="background:#8e44ad;color:white;border:none;padding:12px 25px;border-radius:8px;cursor:pointer;font-size:1em">
+            <i class="fas fa-times"></i> Fechar
+        </button>
+    </div>
 </div>
 
 <script>
-// ================== DADOS ==================
-let produtos = JSON.parse(localStorage.getItem("produtosALC")) || [];
-let ingredientes = JSON.parse(localStorage.getItem("ingredientesALC")) || [];
+// ================== CONFIGURAÇÃO ==================
+const CONFIG = {
+    limiteIngredientes: 4,
+    precoExtra: 3.00,
+    whatsapp: "5511959958136", // SEU NÚMERO AQUI
+    nomeLoja: "ALC AÇAÍ"
+};
 
+// ================== BANCO DE DADOS ==================
+let produtos = [];
+let ingredientes = [];
+let pedidos = [];
 let carrinho = [];
 let ingredientesSelecionados = [];
-let numeroPedido = Date.now();
+let db = null;
 
-// ================== RENDER ==================
+// Inicializar IndexedDB
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('AlcAcaiDB', 1);
+        
+        request.onerror = () => reject('Erro ao abrir banco de dados');
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            // Criar stores
+            if (!db.objectStoreNames.contains('produtos')) {
+                db.createObjectStore('produtos', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('ingredientes')) {
+                db.createObjectStore('ingredientes', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('pedidos')) {
+                db.createObjectStore('pedidos', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('config')) {
+                db.createObjectStore('config', { keyPath: 'key' });
+            }
+        };
+        
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            carregarDados().then(resolve);
+        };
+    });
+}
+
+// Salvar dados
+function salvarNoDB(store, dados) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([store], 'readwrite');
+        const objectStore = transaction.objectStore(store);
+        
+        // Limpar e adicionar novos
+        const clearRequest = objectStore.clear();
+        clearRequest.onsuccess = () => {
+            dados.forEach(item => {
+                objectStore.put(item);
+            });
+            resolve();
+        };
+        clearRequest.onerror = () => reject('Erro ao salvar dados');
+    });
+}
+
+// Carregar dados
+function carregarDoDB(store) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([store], 'readonly');
+        const objectStore = transaction.objectStore(store);
+        const request = objectStore.getAll();
+        
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject('Erro ao carregar dados');
+    });
+}
+
+// Carregar todos os dados
+async function carregarDados() {
+    try {
+        produtos = await carregarDoDB('produtos');
+        ingredientes = await carregarDoDB('ingredientes');
+        pedidos = await carregarDoDB('pedidos');
+        
+        // Se não houver dados iniciais, criar alguns
+        if (produtos.length === 0) {
+            produtos = [
+                { id: 1, nome: "Açaí Tradicional 200ml", preco: 10.00, categoria: "acai", imagem: null },
+                { id: 2, nome: "Açaí Tradicional 300ml", preco: 15.00, categoria: "acai", imagem: null },
+                { id: 3, nome: "Açaí Tradicional 500ml", preco: 20.00, categoria: "acai", imagem: null },
+                { id: 4, nome: "Açaí com Nutella 200ml", preco: 15.00, categoria: "nutella", imagem: null },
+                { id: 5, nome: "Açaí com Nutella 300ml", preco: 20.00, categoria: "nutella", imagem: null },
+                { id: 6, nome: "Açaí com Nutella 500ml", preco: 25.00, categoria: "nutella", imagem: null },
+                { id: 7, nome: "Cupuaçu 200ml", preco: 10.00, categoria: "cupuacu", imagem: null },
+                { id: 8, nome: "Cupuaçu 300ml", preco: 15.00, categoria: "cupuacu", imagem: null },
+                { id: 9, nome: "Cupuaçu 500ml", preco: 20.00, categoria: "cupuacu", imagem: null }
+            ];
+            await salvarNoDB('produtos', produtos);
+        }
+        
+        if (ingredientes.length === 0) {
+            ingredientes = [
+                { id: 1, nome: "Chocoball", imagem: null },
+                { id: 2, nome: "Sucrilhos", imagem: null },
+                { id: 3, nome: "Paçoca", imagem: null },
+                { id: 4, nome: "M&M", imagem: null },
+                { id: 5, nome: "Leite em Pó", imagem: null },
+                { id: 6, nome: "Leite Condensado", imagem: null },
+                { id: 7, nome: "Granola", imagem: null }
+            ];
+            await salvarNoDB('ingredientes', ingredientes);
+        }
+        
+        renderProdutos();
+        renderIngredientes();
+        atualizarCarrinho();
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        mostrarNotificacao('Erro ao carregar dados. Recarregue a página.', 'error');
+    }
+}
+
+// ================== RENDERIZAÇÃO ==================
 const boxProd = document.getElementById("produtos");
 const boxIng = document.getElementById("ingredientes");
 const avisoProd = document.getElementById("avisoProdutos");
 const avisoIng = document.getElementById("avisoIngredientes");
 
-function renderProdutos(){
-  boxProd.innerHTML="";
-  avisoProd.innerHTML="";
+function renderProdutos() {
+    boxProd.innerHTML = "";
+    avisoProd.innerHTML = "";
 
-  if(produtos.length === 0){
-    avisoProd.innerHTML = `<div class="aviso">⚠️ No momento não temos itens disponíveis no cardápio.</div>`;
-    return;
-  }
+    if (produtos.length === 0) {
+        avisoProd.innerHTML = `
+            <div class="aviso">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Não há produtos cadastrados. Use o painel ADMIN para adicionar.
+            </div>
+        `;
+        return;
+    }
 
-  produtos.forEach(p=>{
-    const d=document.createElement("div");
-    d.className="card";
-    d.innerHTML=`
-      <img src="${p.imagem || 'https://via.placeholder.com/300x200?text=Produto'}">
-      <h4>${p.nome}</h4>
-      <p>R$ ${p.preco}</p>
-      <button onclick="addCarrinho(${p.id})">Adicionar</button>
-    `;
-    boxProd.appendChild(d);
-  });
+    // Agrupar por categoria
+    const categorias = {
+        'acai': { nome: '🍨 Açaí Tradicional', produtos: [] },
+        'nutella': { nome: '👑 Açaí com Nutella', produtos: [] },
+        'cupuacu': { nome: '🍃 Cupuaçu', produtos: [] },
+        'outros': { nome: '📦 Outros', produtos: [] }
+    };
+
+    produtos.forEach(p => {
+        const categoria = p.categoria || 'outros';
+        if (categorias[categoria]) {
+            categorias[categoria].produtos.push(p);
+        } else {
+            categorias.outros.produtos.push(p);
+        }
+    });
+
+    // Renderizar cada categoria
+    Object.entries(categorias).forEach(([key, cat]) => {
+        if (cat.produtos.length > 0) {
+            const catDiv = document.createElement('div');
+            catDiv.style.marginTop = '30px';
+            catDiv.innerHTML = `<h3 style="color:#8e44ad;border-bottom:2px solid #8e44ad;padding-bottom:5px">${cat.nome}</h3>`;
+            boxProd.appendChild(catDiv);
+
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+            catDiv.appendChild(grid);
+
+            cat.produtos.forEach(p => {
+                const d = document.createElement("div");
+                d.className = "card fade-in";
+                d.innerHTML = `
+                    <img src="${p.imagem || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%239b59b6"/><text x="50" y="55" font-family="Arial" font-size="16" fill="white" text-anchor="middle">${p.nome.substring(0,15)}</text></svg>'}" 
+                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%239b59b6%22/><text x=%2250%22 y=%2255%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22white%22 text-anchor=%22middle%22>IMG</text></svg>'">
+                    <h4 style="margin:10px 0">${p.nome}</h4>
+                    <p style="color:#2ecc71;font-size:1.2em;font-weight:bold">R$ ${p.preco.toFixed(2)}</p>
+                    <button onclick="addCarrinho(${p.id})">
+                        <i class="fas fa-cart-plus"></i> Adicionar
+                    </button>
+                `;
+                grid.appendChild(d);
+            });
+        }
+    });
 }
 
-function renderIngredientes(){
-  boxIng.innerHTML="";
-  avisoIng.innerHTML="";
+function renderIngredientes() {
+    boxIng.innerHTML = "";
+    avisoIng.innerHTML = "";
 
-  if(ingredientes.length === 0){
-    avisoIng.innerHTML = `<div class="aviso">⚠️ No momento não temos ingredientes disponíveis.</div>`;
-    return;
-  }
+    if (ingredientes.length === 0) {
+        avisoIng.innerHTML = `
+            <div class="aviso">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Não há ingredientes cadastrados. Use o painel ADMIN para adicionar.
+            </div>
+        `;
+        return;
+    }
 
-  ingredientes.forEach(i=>{
-    const d=document.createElement("div");
-    d.className="ing-card";
-    d.innerHTML=`
-      <img src="${i.imagem || 'https://via.placeholder.com/300x200?text=Ingrediente'}">
-      <h4>${i.nome}</h4>
-    `;
-    d.onclick=()=>toggleIngrediente(i.id,d);
-    boxIng.appendChild(d);
-  });
+    ingredientes.forEach(i => {
+        const d = document.createElement("div");
+        d.className = `ing-card ${ingredientesSelecionados.includes(i.id) ? "sel" : ""}`;
+        d.innerHTML = `
+            <img src="${i.imagem || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%237f8c8d"/><text x="50" y="55" font-family="Arial" font-size="14" fill="white" text-anchor="middle">${i.nome.substring(0,20)}</text></svg>'}" 
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%237f8c8d%22/><text x=%2250%22 y=%2255%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22white%22 text-anchor=%22middle%22>ING</text></svg>'">
+            <h4 style="margin:10px 0">${i.nome}</h4>
+            <small style="color:#666">${ingredientesSelecionados.includes(i.id) ? 'Selecionado ✓' : 'Clique para selecionar'}</small>
+        `;
+        d.onclick = () => toggleIngrediente(i.id, d);
+        boxIng.appendChild(d);
+    });
 }
-
-renderProdutos();
-renderIngredientes();
 
 // ================== CARRINHO ==================
-function addCarrinho(id){
-  const p=produtos.find(i=>i.id===id);
-  if(!p){
-    alert("Este item não está mais disponível.");
-    return;
-  }
-  carrinho.push(p);
-  atualizarCarrinho();
+function addCarrinho(id) {
+    const p = produtos.find(i => i.id === id);
+    if (!p) {
+        mostrarNotificacao('Este item não está mais disponível.', 'error');
+        return;
+    }
+    
+    const itemExistente = carrinho.find(item => item.id === id);
+    if (itemExistente) {
+        itemExistente.quantidade++;
+    } else {
+        carrinho.push({
+            ...p,
+            quantidade: 1
+        });
+    }
+    
+    atualizarCarrinho();
+    mostrarNotificacao(`${p.nome} adicionado ao carrinho!`, 'success');
 }
 
-function toggleIngrediente(id,el){
-  const idx=ingredientesSelecionados.indexOf(id);
-  if(idx>-1){
-    ingredientesSelecionados.splice(idx,1);
-    el.classList.remove("sel");
-  }else{
-    ingredientesSelecionados.push(id);
-    el.classList.add("sel");
-  }
-  atualizarCarrinho();
+function toggleIngrediente(id, el) {
+    const idx = ingredientesSelecionados.indexOf(id);
+    
+    if (idx > -1) {
+        ingredientesSelecionados.splice(idx, 1);
+        el.classList.remove("sel");
+    } else {
+        // Verificar limite
+        if (ingredientesSelecionados.length >= CONFIG.limiteIngredientes) {
+            if (!confirm(`Você já selecionou ${CONFIG.limiteIngredientes} ingredientes grátis.\nDo 5º em diante: R$ ${CONFIG.precoExtra.toFixed(2)} cada.\nDeseja adicionar mesmo assim?`)) {
+                return;
+            }
+        }
+        ingredientesSelecionados.push(id);
+        el.classList.add("sel");
+    }
+    atualizarCarrinho();
 }
 
-function atualizarCarrinho(){
-  const ul=document.getElementById("carrinho");
-  ul.innerHTML="";
-  let total=0;
+function atualizarCarrinho() {
+    const ul = document.getElementById("carrinho");
+    ul.innerHTML = "";
+    let subtotal = 0;
 
-  carrinho.forEach(i=>{
-    const li=document.createElement("li");
-    li.textContent=`${i.nome} - R$ ${i.preco}`;
-    ul.appendChild(li);
-    total+=i.preco;
-  });
+    if (carrinho.length === 0 && ingredientesSelecionados.length === 0) {
+        ul.innerHTML = '<li style="text-align:center;color:#666"><i class="fas fa-shopping-cart"></i> Carrinho vazio</li>';
+        document.getElementById("subtotal").textContent = "0.00";
+        document.getElementById("extra").textContent = "0.00";
+        document.getElementById("total").textContent = "0.00";
+        return;
+    }
 
-  let extra=0;
-  if(ingredientesSelecionados.length>4){
-    extra=(ingredientesSelecionados.length-4)*3;
-  }
+    carrinho.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <div>
+                <strong>${item.nome}</strong><br>
+                <small>R$ ${item.preco.toFixed(2)} cada</small>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+                <button onclick="alterarQuantidade(${item.id}, -1)" style="background:#95a5a6;padding:5px 10px">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span style="min-width:30px;text-align:center">${item.quantidade}</span>
+                <button onclick="alterarQuantidade(${item.id}, 1)" style="background:#95a5a6;padding:5px 10px">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="removerItem(${item.id})" style="background:#e74c3c">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        ul.appendChild(li);
+        subtotal += item.preco * item.quantidade;
+    });
 
-  document.getElementById("extra").textContent=extra;
-  document.getElementById("total").textContent=total+extra;
+    // Mostrar ingredientes selecionados
+    if (ingredientesSelecionados.length > 0) {
+        const nomesIng = ingredientes
+            .filter(i => ingredientesSelecionados.includes(i.id))
+            .map(i => i.nome);
+        
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <div>
+                <strong>Ingredientes</strong><br>
+                <small>${nomesIng.join(', ')}</small>
+            </div>
+        `;
+        ul.appendChild(li);
+    }
+
+    let extra = 0;
+    if (ingredientesSelecionados.length > CONFIG.limiteIngredientes) {
+        extra = (ingredientesSelecionados.length - CONFIG.limiteIngredientes) * CONFIG.precoExtra;
+    }
+
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+    document.getElementById("extra").textContent = extra.toFixed(2);
+    document.getElementById("total").textContent = (subtotal + extra).toFixed(2);
 }
 
-// ================== FINALIZAR ==================
-function finalizarPedido(){
-  if(carrinho.length===0){
-    alert("⚠️ Não é possível finalizar. Não há itens disponíveis no pedido.");
-    return;
-  }
+function alterarQuantidade(id, delta) {
+    const item = carrinho.find(i => i.id === id);
+    if (item) {
+        item.quantidade += delta;
+        if (item.quantidade < 1) {
+            carrinho = carrinho.filter(i => i.id !== id);
+        }
+        atualizarCarrinho();
+    }
+}
 
-  const forma=document.getElementById("pagamento").value;
-  const msg=document.getElementById("mensagem").value;
+function removerItem(id) {
+    carrinho = carrinho.filter(i => i.id !== id);
+    atualizarCarrinho();
+    mostrarNotificacao('Item removido do carrinho', 'warning');
+}
 
-  let texto=`🧾 *PEDIDO ALC AÇAÍ*\n\n`;
-  texto+=`📦 Pedido nº: ${numeroPedido}\n\n`;
+// ================== FINALIZAR PEDIDO ==================
+async function finalizarPedido() {
+    if (carrinho.length === 0) {
+        mostrarNotificacao('Adicione itens ao carrinho antes de finalizar!', 'error');
+        return;
+    }
 
-  carrinho.forEach(i=>{
-    texto+=`• ${i.nome} - R$ ${i.preco}\n`;
-  });
+    const forma = document.getElementById("pagamento").value;
+    const msg = document.getElementById("mensagem").value;
+    const numeroPedido = `PED${Date.now().toString().slice(-8)}`;
 
-  const nomesIng = ingredientes
-    .filter(i=>ingredientesSelecionados.includes(i.id))
-    .map(i=>i.nome);
+    // Calcular totais
+    let subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+    let extra = 0;
+    if (ingredientesSelecionados.length > CONFIG.limiteIngredientes) {
+        extra = (ingredientesSelecionados.length - CONFIG.limiteIngredientes) * CONFIG.precoExtra;
+    }
+    const total = subtotal + extra;
 
-  texto+=`\n🥄 Ingredientes: ${nomesIng.join(", ") || "Nenhum"}`;
+    // Criar pedido
+    const pedido = {
+        id: numeroPedido,
+        data: new Date().toLocaleString('pt-BR'),
+        itens: [...carrinho],
+        ingredientes: ingredientes.filter(i => ingredientesSelecionados.includes(i.id)).map(i => i.nome),
+        formaPagamento: forma,
+        observacoes: msg,
+        subtotal: subtotal,
+        extra: extra,
+        total: total,
+        status: 'pendente'
+    };
 
-  let extra=0;
-  if(ingredientesSelecionados.length>4){
-    extra=(ingredientesSelecionados.length-4)*3;
-    texto+=`\n➕ Extras: R$ ${extra}`;
-  }
+    // Salvar pedido
+    pedidos.push(pedido);
+    try {
+        await salvarNoDB('pedidos', pedidos);
+    } catch (error) {
+        console.error('Erro ao salvar pedido:', error);
+    }
 
-  texto+=`\n\n💰 Total: R$ ${document.getElementById("total").textContent}`;
-  texto+=`\n💳 Pagamento: ${forma}`;
-  texto+=`\n\n📝 Mensagem: ${msg}`;
+    // Enviar para WhatsApp
+    enviarWhatsApp(pedido);
 
-  const url=`https://wa.me/5511959958136?text=${encodeURIComponent(texto)}`;
-  window.open(url,"_blank");
+    // Mostrar confirmação
+    mostrarConfirmacao(pedido);
+
+    // Limpar carrinho
+    carrinho = [];
+    ingredientesSelecionados = [];
+    atualizarCarrinho();
+    renderIngredientes();
+    document.getElementById("mensagem").value = "";
+}
+
+function enviarWhatsApp(pedido) {
+    let texto = `*🛒 NOVO PEDIDO - ${CONFIG.nomeLoja}*%0A`;
+    texto += `========================%0A`;
+    texto += `*Pedido:* ${pedido.id}%0A`;
+    texto += `*Data:* ${pedido.data}%0A`;
+    texto += `*Pagamento:* ${pedido.formaPagamento}%0A`;
+    texto += `------------------------%0A`;
+    texto += `*ITENS:*%0A`;
+    
+    pedido.itens.forEach(item => {
+        texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}%0A`;
+    });
+    
+    if (pedido.ingredientes.length > 0) {
+        texto += `------------------------%0A`;
+        texto += `*INGREDIENTES:*%0A`;
+        texto += `• ${pedido.ingredientes.join('%0A• ')}%0A`;
+    }
+    
+    if (pedido.ingredientes.length > CONFIG.limiteIngredientes) {
+        texto += `*Ingredientes extras: R$ ${pedido.extra.toFixed(2)}*%0A`;
+    }
+    
+    if (pedido.observacoes) {
+        texto += `------------------------%0A`;
+        texto += `*OBSERVAÇÕES:*%0A`;
+        texto += `${pedido.observacoes}%0A`;
+    }
+    
+    texto += `========================%0A`;
+    texto += `*Subtotal: R$ ${pedido.subtotal.toFixed(2)}*%0A`;
+    if (pedido.extra > 0) texto += `*Extras: R$ ${pedido.extra.toFixed(2)}*%0A`;
+    texto += `*TOTAL: R$ ${pedido.total.toFixed(2)}*`;
+    
+    const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
+    window.open(url, '_blank');
+}
+
+function mostrarConfirmacao(pedido) {
+    document.getElementById('numeroPedidoModal').textContent = pedido.id;
+    
+    let resumo = `
+        <p><strong>Data:</strong> ${pedido.data}</p>
+        <p><strong>Pagamento:</strong> ${pedido.formaPagamento}</p>
+        <hr>
+        <p><strong>Itens:</strong></p>
+        <ul style="padding-left:20px">
+    `;
+    
+    pedido.itens.forEach(item => {
+        resumo += `<li>${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}</li>`;
+    });
+    
+    resumo += `</ul>`;
+    
+    if (pedido.ingredientes.length > 0) {
+        resumo += `<p><strong>Ingredientes:</strong> ${pedido.ingredientes.join(', ')}</p>`;
+    }
+    
+    if (pedido.observacoes) {
+        resumo += `<p><strong>Observações:</strong> ${pedido.observacoes}</p>`;
+    }
+    
+    resumo += `<hr>`;
+    resumo += `<p><strong>Subtotal:</strong> R$ ${pedido.subtotal.toFixed(2)}</p>`;
+    if (pedido.extra > 0) resumo += `<p><strong>Extras:</strong> R$ ${pedido.extra.toFixed(2)}</p>`;
+    resumo += `<p style="font-size:1.2em;color:#2ecc71"><strong>TOTAL:</strong> R$ ${pedido.total.toFixed(2)}</p>`;
+    
+    document.getElementById('resumoPedido').innerHTML = resumo;
+    document.getElementById('modal').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
 }
 
 // ================== ADMIN ==================
-function abrirAdmin(){
-  const senha=prompt("Senha do painel:");
-  if(senha==="alc123"){
-    document.getElementById("admin").style.display="block";
+async function abrirAdmin() {
+    const senha = prompt("Senha do painel ADMIN:");
+    if (senha === "alc123") {
+        document.getElementById("admin").style.display = "block";
+        await renderAdmin();
+    } else {
+        alert("Senha incorreta!");
+    }
+}
+
+function fecharAdmin() {
+    document.getElementById("admin").style.display = "none";
+}
+
+async function renderAdmin() {
+    // Renderizar produtos
+    const listaProd = document.getElementById("listaAdmin");
+    listaProd.innerHTML = "";
+    
+    produtos.forEach((p, idx) => {
+        const div = document.createElement("div");
+        div.className = "admin-card";
+        div.innerHTML = `
+            <img src="${p.imagem || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%239b59b6"/><text x="50" y="55" font-family="Arial" font-size="12" fill="white" text-anchor="middle">PROD</text></svg>'}" 
+                 style="width:100%;height:100px;object-fit:cover;border-radius:5px">
+            <h4>${p.nome}</h4>
+            <p>R$ ${p.preco.toFixed(2)}</p>
+            <button onclick="editarProduto(${p.id})" style="background:#3498db;margin:5px">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button onclick="excluirProduto(${p.id})" style="background:#e74c3c;margin:5px">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+        `;
+        listaProd.appendChild(div);
+    });
+
+    // Renderizar ingredientes
+    const listaIng = document.getElementById("listaIngAdmin");
+    listaIng.innerHTML = "";
+    
+    ingredientes.forEach((i, idx) => {
+        const div = document.createElement("div");
+        div.className = "admin-card";
+        div.innerHTML = `
+            <img src="${i.imagem || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%237f8c8d"/><text x="50" y="55" font-family="Arial" font-size="12" fill="white" text-anchor="middle">ING</text></svg>'}" 
+                 style="width:100%;height:100px;object-fit:cover;border-radius:5px">
+            <h4>${i.nome}</h4>
+            <button onclick="editarIngrediente(${i.id})" style="background:#3498db;margin:5px">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button onclick="excluirIngrediente(${i.id})" style="background:#e74c3c;margin:5px">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+        `;
+        listaIng.appendChild(div);
+    });
+
+    // Renderizar pedidos
+    const listaPed = document.getElementById("listaPedidos");
+    listaPed.innerHTML = "";
+    
+    if (pedidos.length === 0) {
+        listaPed.innerHTML = '<p style="text-align:center;color:#999">Nenhum pedido recebido</p>';
+    } else {
+        pedidos.sort((a, b) => new Date(b.data) - new Date(a.data)).forEach(p => {
+            const div = document.createElement("div");
+            div.className = "admin-card";
+            div.innerHTML = `
+                <div style="display:flex;justify-content:space-between">
+                    <strong>${p.id}</strong>
+                    <span class="status-${p.status}">${p.status}</span>
+                </div>
+                <p><small>${p.data}</small></p>
+                <p>${p.itens.length} itens - R$ ${p.total.toFixed(2)}</p>
+                <p><strong>Pagamento:</strong> ${p.formaPagamento}</p>
+                <button onclick="verPedido('${p.id}')" style="background:#9b59b6;margin:2px">
+                    <i class="fas fa-eye"></i> Ver
+                </button>
+                <button onclick="alterarStatus('${p.id}')" style="background:#2ecc71;margin:2px">
+                    <i class="fas fa-check"></i> Status
+                </button>
+                <button onclick="excluirPedido('${p.id}')" style="background:#e74c3c;margin:2px">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            `;
+            listaPed.appendChild(div);
+        });
+    }
+}
+
+async function addProduto() {
+    const nome = document.getElementById("aNome").value;
+    const preco = parseFloat(document.getElementById("aPreco").value);
+    const categoria = document.getElementById("aCategoria").value;
+    const file = document.getElementById("aImagem").files[0];
+
+    if (!nome || !preco) {
+        mostrarNotificacao('Preencha nome e preço!', 'error');
+        return;
+    }
+
+    let imagemBase64 = null;
+    if (file) {
+        imagemBase64 = await converterParaBase64(file);
+    }
+
+    const novoProduto = {
+        id: Date.now(),
+        nome: nome,
+        preco: preco,
+        categoria: categoria,
+        imagem: imagemBase64
+    };
+
+    produtos.push(novoProduto);
+    await salvarNoDB('produtos', produtos);
+    
+    document.getElementById("aNome").value = "";
+    document.getElementById("aPreco").value = "";
+    document.getElementById("aImagem").value = "";
+    
+    renderProdutos();
     renderAdmin();
-  }else alert("Senha incorreta");
-}
-function fecharAdmin(){
-  document.getElementById("admin").style.display="none";
+    mostrarNotificacao('Produto adicionado com sucesso!', 'success');
 }
 
-function renderAdmin(){
-  const ul=document.getElementById("listaAdmin");
-  ul.innerHTML="";
-  produtos.forEach((p,idx)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`${p.nome} - R$ ${p.preco}
-      <button onclick="excluirProduto(${idx})">Excluir</button>`;
-    ul.appendChild(li);
-  });
+async function addIngrediente() {
+    const nome = document.getElementById("iNome").value;
+    const file = document.getElementById("iImagem").files[0];
 
-  const uli=document.getElementById("listaIngAdmin");
-  uli.innerHTML="";
-  ingredientes.forEach((i,idx)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`${i.nome}
-      <button onclick="excluirIngrediente(${idx})">Excluir</button>`;
-    uli.appendChild(li);
-  });
+    if (!nome) {
+        mostrarNotificacao('Preencha o nome!', 'error');
+        return;
+    }
+
+    let imagemBase64 = null;
+    if (file) {
+        imagemBase64 = await converterParaBase64(file);
+    }
+
+    const novoIngrediente = {
+        id: Date.now(),
+        nome: nome,
+        imagem: imagemBase64
+    };
+
+    ingredientes.push(novoIngrediente);
+    await salvarNoDB('ingredientes', ingredientes);
+    
+    document.getElementById("iNome").value = "";
+    document.getElementById("iImagem").value = "";
+    
+    renderIngredientes();
+    renderAdmin();
+    mostrarNotificacao('Ingrediente adicionado com sucesso!', 'success');
 }
 
-function addProduto(){
-  const nome=document.getElementById("aNome").value;
-  const preco=document.getElementById("aPreco").value;
-  const file=document.getElementById("aImagem").files[0];
-
-  if(!file){alert("Selecione uma imagem");return;}
-
-  const reader=new FileReader();
-  reader.onload=function(e){
-    produtos.push({
-      id:Date.now(),
-      nome,
-      preco:Number(preco),
-      imagem:e.target.result
+function converterParaBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
     });
-    localStorage.setItem("produtosALC",JSON.stringify(produtos));
-    renderProdutos(); renderAdmin();
-  };
-  reader.readAsDataURL(file);
 }
 
-function addIngrediente(){
-  const nome=document.getElementById("iNome").value;
-  const file=document.getElementById("iImagem").files[0];
-
-  if(!file){alert("Selecione uma imagem");return;}
-
-  const reader=new FileReader();
-  reader.onload=function(e){
-    ingredientes.push({
-      id:Date.now(),
-      nome,
-      imagem:e.target.result
-    });
-    localStorage.setItem("ingredientesALC",JSON.stringify(ingredientes));
-    renderIngredientes(); renderAdmin();
-  };
-  reader.readAsDataURL(file);
+async function excluirProduto(id) {
+    if (confirm("Tem certeza que deseja excluir este produto?")) {
+        produtos = produtos.filter(p => p.id !== id);
+        await salvarNoDB('produtos', produtos);
+        renderProdutos();
+        renderAdmin();
+        mostrarNotificacao('Produto excluído!', 'warning');
+    }
 }
 
-function excluirProduto(i){
-  if(confirm("Excluir produto?")){
-    produtos.splice(i,1);
-    localStorage.setItem("produtosALC",JSON.stringify(produtos));
-    renderProdutos(); renderAdmin();
-  }
+async function excluirIngrediente(id) {
+    if (confirm("Tem certeza que deseja excluir este ingrediente?")) {
+        ingredientes = ingredientes.filter(i => i.id !== id);
+        await salvarNoDB('ingredientes', ingredientes);
+        renderIngredientes();
+        renderAdmin();
+        mostrarNotificacao('Ingrediente excluído!', 'warning');
+    }
 }
 
-function excluirIngrediente(i){
-  if(confirm("Excluir ingrediente?")){
-    ingredientes.splice(i,1);
-    localStorage.setItem("ingredientesALC",JSON.stringify(ingredientes));
-    renderIngredientes(); renderAdmin();
-  }
+async function excluirPedido(id) {
+    if (confirm("Tem certeza que deseja excluir este pedido?")) {
+        pedidos = pedidos.filter(p => p.id !== id);
+        await salvarNoDB('pedidos', pedidos);
+        renderAdmin();
+        mostrarNotificacao('Pedido excluído!', 'warning');
+    }
 }
+
+function verPedido(id) {
+    const pedido = pedidos.find(p => p.id === id);
+    if (pedido) {
+        alert(`Pedido ${pedido.id}\nData: ${pedido.data}\nItens: ${pedido.itens.length}\nTotal: R$ ${pedido.total.toFixed(2)}\nStatus: ${pedido.status}`);
+    }
+}
+
+async function alterarStatus(id) {
+    const pedido = pedidos.find(p => p.id === id);
+    if (pedido) {
+        const novoStatus = prompt(`Alterar status do pedido ${id}:\n(pendente, preparo, entregue, cancelado)`, pedido.status);
+        if (novoStatus && ['pendente', 'preparo', 'entregue', 'cancelado'].includes(novoStatus)) {
+            pedido.status = novoStatus;
+            await salvarNoDB('pedidos', pedidos);
+            renderAdmin();
+            mostrarNotificacao(`Status alterado para: ${novoStatus}`, 'success');
+        }
+    }
+}
+
+function editarProduto(id) {
+    const produto = produtos.find(p => p.id === id);
+    if (produto) {
+        document.getElementById("aNome").value = produto.nome;
+        document.getElementById("aPreco").value = produto.preco;
+        document.getElementById("aCategoria").value = produto.categoria || 'outros';
+        
+        excluirProduto(id);
+        mostrarNotificacao('Produto pronto para edição. Altere os dados e clique em Salvar.', 'info');
+    }
+}
+
+function editarIngrediente(id) {
+    const ingrediente = ingredientes.find(i => i.id === id);
+    if (ingrediente) {
+        document.getElementById("iNome").value = ingrediente.nome;
+        excluirIngrediente(id);
+        mostrarNotificacao('Ingrediente pronto para edição. Altere os dados e clique em Salvar.', 'info');
+    }
+}
+
+// ================== BACKUP E RESTAURAÇÃO ==================
+async function exportarDados() {
+    const dados = {
+        produtos: produtos,
+        ingredientes: ingredientes,
+        pedidos: pedidos,
+        exportadoEm: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `alc-acai-backup-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    mostrarNotificacao('Dados exportados com sucesso!', 'success');
+}
+
+async function importarDados() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = async (event) => {
+            try {
+                const dados = JSON.parse(event.target.result);
+                
+                if (confirm(`Importar ${dados.produtos?.length || 0} produtos, ${dados.ingredientes?.length || 0} ingredientes e ${dados.pedidos?.length || 0} pedidos?`)) {
+                    produtos = dados.produtos || produtos;
+                    ingredientes = dados.ingredientes || ingredientes;
+                    pedidos = dados.pedidos || pedidos;
+                    
+                    await salvarNoDB('produtos', produtos);
+                    await salvarNoDB('ingredientes', ingredientes);
+                    await salvarNoDB('pedidos', pedidos);
+                    
+                    renderProdutos();
+                    renderIngredientes();
+                    renderAdmin();
+                    mostrarNotificacao('Dados importados com sucesso!', 'success');
+                }
+            } catch (error) {
+                mostrarNotificacao('Erro ao importar dados. Arquivo inválido.', 'error');
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
+async function limparTudo() {
+    if (confirm("ATENÇÃO: Isso apagará TODOS os produtos, ingredientes e pedidos. Tem certeza?")) {
+        produtos = [];
+        ingredientes = [];
+        pedidos = [];
+        
+        await salvarNoDB('produtos', []);
+        await salvarNoDB('ingredientes', []);
+        await salvarNoDB('pedidos', []);
+        
+        renderProdutos();
+        renderIngredientes();
+        renderAdmin();
+        mostrarNotificacao('Todos os dados foram apagados.', 'warning');
+    }
+}
+
+// ================== UTILITÁRIOS ==================
+function mostrarNotificacao(mensagem, tipo = 'info') {
+    // Tipos: success, error, warning, info
+    const cores = {
+        success: '#2ecc71',
+        error: '#e74c3c',
+        warning: '#f39c12',
+        info: '#3498db'
+    };
+    
+    const notificacao = document.createElement('div');
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${cores[tipo] || '#3498db'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        z-index: 9999;
+        animation: fadeIn 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 400px;
+    `;
+    
+    notificacao.innerHTML = `
+        <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : tipo === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        <span>${mensagem}</span>
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+        notificacao.style.animation = 'fadeIn 0.3s reverse';
+        setTimeout(() => {
+            if (notificacao.parentNode) {
+                notificacao.remove();
+            }
+        }, 300);
+    }, 3000);
+}
+
+// ================== INICIALIZAÇÃO ==================
+document.addEventListener('DOMContentLoaded', async () => {
+    // Adicionar estilo para animação fadeIn
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Inicializar banco de dados
+    try {
+        await initDB();
+        mostrarNotificacao('Sistema ALC AÇAÍ carregado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao inicializar:', error);
+        mostrarNotificacao('Erro ao carregar sistema. Recarregue a página.', 'error');
+    }
+});
 </script>
 </body>
 </html>
