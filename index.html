@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>ALC AÇAÍ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#f5f5f5}
+header{background:#4b0f6b;color:#fff;padding:10px;text-align:center}
+.logo{max-width:90px;display:block;margin:0 auto 5px}
+.container{padding:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px}
+
+.card,.ing-card{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:10px;text-align:center}
+.card img,.ing-card img{width:100%;height:120px;object-fit:cover;border-radius:8px}
+.card button{background:#4b0f6b;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+
+.ing-card{cursor:pointer;border:2px solid transparent}
+.ing-card.sel{border-color:#4b0f6b}
+
+.aviso{
+  background:#fff3cd;
+  color:#856404;
+  padding:12px;
+  border-radius:8px;
+  text-align:center;
+  margin:10px 0;
+  font-weight:bold;
+}
+
+#carrinhoBox{background:#fff;padding:15px;border-radius:10px;margin-top:20px}
+
+#adminBtn{position:fixed;bottom:10px;right:10px;background:#000;color:#fff;border:none;padding:8px 12px;border-radius:20px;font-size:12px}
+
+#admin{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#111;color:#fff;padding:20px;overflow:auto}
+#admin input{padding:6px;margin:4px;width:90%}
+#admin button{padding:8px;margin-top:6px}
+#admin ul li{margin:6px 0}
+#admin ul li button{margin-left:8px;background:red;color:#fff;border:none;padding:4px 8px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <!-- 🔴 TROQUE logo.png pelo nome real da sua imagem -->
+  <img src="logo.png" class="logo" alt="Logo ALC AÇAÍ">
+  <strong>ALC AÇAÍ</strong>
+</header>
+
+<div class="container">
+
+<h2>🍧 Cardápio</h2>
+<div id="avisoProdutos"></div>
+<div id="produtos" class="grid"></div>
+
+<h2>🥄 Escolha até 4 ingredientes grátis</h2>
+<p>Do 5º em diante: <strong>R$ 3,00 cada</strong></p>
+<div id="avisoIngredientes"></div>
+<div id="ingredientes" class="grid"></div>
+
+<div id="carrinhoBox">
+  <h3>🛒 Carrinho</h3>
+  <ul id="carrinho"></ul>
+  <p><strong>Extras:</strong> R$ <span id="extra">0</span></p>
+  <p><strong>Total:</strong> R$ <span id="total">0</span></p>
+
+  <label>Forma de pagamento</label>
+  <select id="pagamento">
+    <option>Cartão</option>
+    <option>Pix</option>
+    <option>Dinheiro</option>
+  </select>
+
+  <br><br>
+  <label>Mensagem para a loja</label><br>
+  <textarea id="mensagem" rows="3" style="width:100%"></textarea><br><br>
+
+  <button onclick="finalizarPedido()">Finalizar Pedido</button>
+</div>
+</div>
+
+<button id="adminBtn" onclick="abrirAdmin()">ADMIN</button>
+
+<!-- ================= PAINEL ADMIN ================= -->
+<div id="admin">
+<h2>Painel Administrativo</h2>
+
+<h3>➕ Adicionar Produto</h3>
+<input id="aNome" placeholder="Nome do produto">
+<input id="aPreco" placeholder="Preço">
+<input type="file" id="aImagem" accept="image/*">
+<button onclick="addProduto()">Adicionar Produto</button>
+
+<h3>➕ Adicionar Ingrediente</h3>
+<input id="iNome" placeholder="Nome do ingrediente">
+<input type="file" id="iImagem" accept="image/*">
+<button onclick="addIngrediente()">Adicionar Ingrediente</button>
+
+<h3>📦 Produtos</h3>
+<ul id="listaAdmin"></ul>
+
+<h3>🥄 Ingredientes</h3>
+<ul id="listaIngAdmin"></ul>
+
+<br>
+<button onclick="fecharAdmin()">Fechar painel</button>
+</div>
+
+<script>
+// ================== DADOS ==================
+let produtos = JSON.parse(localStorage.getItem("produtosALC")) || [];
+let ingredientes = JSON.parse(localStorage.getItem("ingredientesALC")) || [];
+
+let carrinho = [];
+let ingredientesSelecionados = [];
+let numeroPedido = Date.now();
+
+// ================== RENDER ==================
+const boxProd = document.getElementById("produtos");
+const boxIng = document.getElementById("ingredientes");
+const avisoProd = document.getElementById("avisoProdutos");
+const avisoIng = document.getElementById("avisoIngredientes");
+
+function renderProdutos(){
+  boxProd.innerHTML="";
+  avisoProd.innerHTML="";
+
+  if(produtos.length === 0){
+    avisoProd.innerHTML = `<div class="aviso">⚠️ No momento não temos itens disponíveis no cardápio.</div>`;
+    return;
+  }
+
+  produtos.forEach(p=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`
+      <img src="${p.imagem || 'https://via.placeholder.com/300x200?text=Produto'}">
+      <h4>${p.nome}</h4>
+      <p>R$ ${p.preco}</p>
+      <button onclick="addCarrinho(${p.id})">Adicionar</button>
+    `;
+    boxProd.appendChild(d);
+  });
+}
+
+function renderIngredientes(){
+  boxIng.innerHTML="";
+  avisoIng.innerHTML="";
+
+  if(ingredientes.length === 0){
+    avisoIng.innerHTML = `<div class="aviso">⚠️ No momento não temos ingredientes disponíveis.</div>`;
+    return;
+  }
+
+  ingredientes.forEach(i=>{
+    const d=document.createElement("div");
+    d.className="ing-card";
+    d.innerHTML=`
+      <img src="${i.imagem || 'https://via.placeholder.com/300x200?text=Ingrediente'}">
+      <h4>${i.nome}</h4>
+    `;
+    d.onclick=()=>toggleIngrediente(i.id,d);
+    boxIng.appendChild(d);
+  });
+}
+
+renderProdutos();
+renderIngredientes();
+
+// ================== CARRINHO ==================
+function addCarrinho(id){
+  const p=produtos.find(i=>i.id===id);
+  if(!p){
+    alert("Este item não está mais disponível.");
+    return;
+  }
+  carrinho.push(p);
+  atualizarCarrinho();
+}
+
+function toggleIngrediente(id,el){
+  const idx=ingredientesSelecionados.indexOf(id);
+  if(idx>-1){
+    ingredientesSelecionados.splice(idx,1);
+    el.classList.remove("sel");
+  }else{
+    ingredientesSelecionados.push(id);
+    el.classList.add("sel");
+  }
+  atualizarCarrinho();
+}
+
+function atualizarCarrinho(){
+  const ul=document.getElementById("carrinho");
+  ul.innerHTML="";
+  let total=0;
+
+  carrinho.forEach(i=>{
+    const li=document.createElement("li");
+    li.textContent=`${i.nome} - R$ ${i.preco}`;
+    ul.appendChild(li);
+    total+=i.preco;
+  });
+
+  let extra=0;
+  if(ingredientesSelecionados.length>4){
+    extra=(ingredientesSelecionados.length-4)*3;
+  }
+
+  document.getElementById("extra").textContent=extra;
+  document.getElementById("total").textContent=total+extra;
+}
+
+// ================== FINALIZAR ==================
+function finalizarPedido(){
+  if(carrinho.length===0){
+    alert("⚠️ Não é possível finalizar. Não há itens disponíveis no pedido.");
+    return;
+  }
+
+  const forma=document.getElementById("pagamento").value;
+  const msg=document.getElementById("mensagem").value;
+
+  let texto=`🧾 *PEDIDO ALC AÇAÍ*\n\n`;
+  texto+=`📦 Pedido nº: ${numeroPedido}\n\n`;
+
+  carrinho.forEach(i=>{
+    texto+=`• ${i.nome} - R$ ${i.preco}\n`;
+  });
+
+  const nomesIng = ingredientes
+    .filter(i=>ingredientesSelecionados.includes(i.id))
+    .map(i=>i.nome);
+
+  texto+=`\n🥄 Ingredientes: ${nomesIng.join(", ") || "Nenhum"}`;
+
+  let extra=0;
+  if(ingredientesSelecionados.length>4){
+    extra=(ingredientesSelecionados.length-4)*3;
+    texto+=`\n➕ Extras: R$ ${extra}`;
+  }
+
+  texto+=`\n\n💰 Total: R$ ${document.getElementById("total").textContent}`;
+  texto+=`\n💳 Pagamento: ${forma}`;
+  texto+=`\n\n📝 Mensagem: ${msg}`;
+
+  const url=`https://wa.me/5511959958136?text=${encodeURIComponent(texto)}`;
+  window.open(url,"_blank");
+}
+
+// ================== ADMIN ==================
+function abrirAdmin(){
+  const senha=prompt("Senha do painel:");
+  if(senha==="alc123"){
+    document.getElementById("admin").style.display="block";
+    renderAdmin();
+  }else alert("Senha incorreta");
+}
+function fecharAdmin(){
+  document.getElementById("admin").style.display="none";
+}
+
+function renderAdmin(){
+  const ul=document.getElementById("listaAdmin");
+  ul.innerHTML="";
+  produtos.forEach((p,idx)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`${p.nome} - R$ ${p.preco}
+      <button onclick="excluirProduto(${idx})">Excluir</button>`;
+    ul.appendChild(li);
+  });
+
+  const uli=document.getElementById("listaIngAdmin");
+  uli.innerHTML="";
+  ingredientes.forEach((i,idx)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`${i.nome}
+      <button onclick="excluirIngrediente(${idx})">Excluir</button>`;
+    uli.appendChild(li);
+  });
+}
+
+function addProduto(){
+  const nome=document.getElementById("aNome").value;
+  const preco=document.getElementById("aPreco").value;
+  const file=document.getElementById("aImagem").files[0];
+
+  if(!file){alert("Selecione uma imagem");return;}
+
+  const reader=new FileReader();
+  reader.onload=function(e){
+    produtos.push({
+      id:Date.now(),
+      nome,
+      preco:Number(preco),
+      imagem:e.target.result
+    });
+    localStorage.setItem("produtosALC",JSON.stringify(produtos));
+    renderProdutos(); renderAdmin();
+  };
+  reader.readAsDataURL(file);
+}
+
+function addIngrediente(){
+  const nome=document.getElementById("iNome").value;
+  const file=document.getElementById("iImagem").files[0];
+
+  if(!file){alert("Selecione uma imagem");return;}
+
+  const reader=new FileReader();
+  reader.onload=function(e){
+    ingredientes.push({
+      id:Date.now(),
+      nome,
+      imagem:e.target.result
+    });
+    localStorage.setItem("ingredientesALC",JSON.stringify(ingredientes));
+    renderIngredientes(); renderAdmin();
+  };
+  reader.readAsDataURL(file);
+}
+
+function excluirProduto(i){
+  if(confirm("Excluir produto?")){
+    produtos.splice(i,1);
+    localStorage.setItem("produtosALC",JSON.stringify(produtos));
+    renderProdutos(); renderAdmin();
+  }
+}
+
+function excluirIngrediente(i){
+  if(confirm("Excluir ingrediente?")){
+    ingredientes.splice(i,1);
+    localStorage.setItem("ingredientesALC",JSON.stringify(ingredientes));
+    renderIngredientes(); renderAdmin();
+  }
+}
+</script>
+</body>
+</html>
